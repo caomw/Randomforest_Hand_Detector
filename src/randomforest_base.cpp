@@ -12,7 +12,7 @@ CNode::CNode()
     prob = -1;
 }
 
-CNode(CSplitCandidate phi)
+CNode::CNode(CSplitCandidate phi)
 {
     phi = phi;
     prob = -1;
@@ -20,8 +20,8 @@ CNode(CSplitCandidate phi)
 
 CNode::CNode(float p)
 {
-    l = -1;
-    r = -1;
+    left = -1;
+    right = -1;
     prob = p;
 }
 
@@ -30,7 +30,7 @@ bool CNode::isLeaf()
     return prob > - EPS;
 }
 
-CSplitCandidate RandSplitCandidate(int range_offset)
+CSplitCandidate CSplitCandidate::RandSplitCandidate(int range_offset)
 {
     CSplitCandidate phi;
     phi.du = RandFloatLog(range_offset);
@@ -84,7 +84,7 @@ CTrainingData::CTrainingData(std::string img_dir, int num_image, int num_pixel)
     {
         stringstream file_name;
         
-        file_name << img_dir << ( i < 10? "000": \
+        file_name << img_dir << "depth_000" <<  ( i < 10? "000": \
             (i < 100? "00":(i < 1000? "0":""))) << i << ".png";
         Mat img = imread(file_name.str());
         if (img.empty())
@@ -136,7 +136,7 @@ CTrainingData:: ~CTrainingData()
 CTrainParam::CTrainParam()
 {
     num_tree = 4;
-    num_image = 6736;
+    num_image = 600;//6736;
     num_pixel = 2000;
     num_offset = 1000;
     max_dep = 20;

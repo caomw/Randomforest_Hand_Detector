@@ -29,7 +29,7 @@ inline float RandFloat(float R)
     return tmp * R;
 }
     
-inline RandFloatLog(float R)
+inline float RandFloatLog(float R)
 {
     float tmp = log(R + 1);
     return exp(RandFloat(tmp)) - 1;
@@ -49,8 +49,6 @@ public:
 
 class CTrainingData
 {
-private:
-    void shuffle();
 public:
     std::vector<cv::Mat> images;
     std::vector<CPixel> data;
@@ -59,9 +57,9 @@ public:
     ~CTrainingData();
     CTrainingData(std::string img_dir, int num_image, int num_pixel);
     void shuffle();
-    void SortDataByFeature(CRange &range);
-    int GetDepth(int u, int v, cv::Mat img);
-    float GetLabel(int u, int v, cv::Mat img);
+    void SortDataByFeature(int l, int r);
+    int GetDepth(int u, int v, cv::Mat &img);
+    float GetLabel(int u, int v, cv::Mat &img);
     int GetDepth(CPixel &p);
     float GetLabel(CPixel &p);
 };
@@ -72,7 +70,7 @@ public:
     int du, dv, tau;
     CSplitCandidate(){}
     CSplitCandidate(int du, int dv, int tau): du(du), dv(dv), tau(tau){}
-    CSplitCandidate RandSplitCandidate(int range_offset);
+    static CSplitCandidate RandSplitCandidate(int range_offset);
 };
 
 class CNode
@@ -83,8 +81,8 @@ public:
     float prob;
     CNode();
     CNode(float p);
-    CNode(int left, int right, CSplitCandidate phi);
-    inline bool isLeaf();
+    CNode(CSplitCandidate phi);
+    bool isLeaf();
 };
 
 class CStackElement

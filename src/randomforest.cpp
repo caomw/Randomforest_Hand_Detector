@@ -22,7 +22,7 @@ bool CRandomForest::TestLeaf(int l, int r, int dep)
     
     float avg_label = 0;
     for (int i = l; i <= r; i++)
-        avg_label += td.GetLabel(td.data[i])
+        avg_label += td.GetLabel(td.data[i]);
     avg_label /= (r - l + 1);
     if (avg_label < DELTA || avg_label > 1 - DELTA)
     {
@@ -33,27 +33,27 @@ bool CRandomForest::TestLeaf(int l, int r, int dep)
     return false;
 }
 
-float CRandomForest::Prob(int l, int r)
+float CRandomForest::GetProb(int l, int r)
 {
     float avg_label = 0;
     for (int i = l; i <= r; i++)
-        avg_label += td.GetLabel(td.data[i])
+        avg_label += td.GetLabel(td.data[i]);
     return avg_label / (r - l + 1);
 }
 
 int CRandomForest::GetFeature(Mat &img, int u, int v, int du, int dv)
 {
     int d = td.GetDepth(u, v, img);
-    td.GetDepth(u + du / d, v + dv / d, img) - d;
+    return td.GetDepth(u + du / d, v + dv / d, img) - d;
 }
 
 int CRandomForest::GetFeature(CPixel &p, int du, int dv)
 {
     int d = td.GetDepth(p);
-    td.GetDepth(CPixel(p.u + du / d, p.v + dv / d, p.id)) - d;
+    return td.GetDepth(CPixel(p.u + du / d, p.v + dv / d, p.id)) - d;
 }
 
-int SortData(int l, int r, CSplitCandidate &phi)
+int CRandomForest::SortData(int l, int r, CSplitCandidate &phi)
 {
     for (int i = l; i <= r; i++)
         td.data[i].f = GetFeature(td.data[i], phi.du, phi.dv);
@@ -65,7 +65,7 @@ int SortData(int l, int r, CSplitCandidate &phi)
     return r;
 }
 
-CSplitCandidate RandomForest::FindBestPhi(int l, int r)
+CSplitCandidate CRandomForest::FindBestPhi(int l, int r)
 {
     float best_gain = - Inf;
     CSplitCandidate best_phi;
@@ -131,14 +131,14 @@ void CRandomForest::TrainTree(int tree_id)
     int mid, cnt = 0;
     cout << "Training tree" << tree_id << "." << endl;
     
-    shuffle();
+    td.shuffle();
     trees[tree_id].clear();
-    trees[tree_id].push_back(Node());
+    trees[tree_id].push_back(CNode());
     stk.push(CStackElement(0, 0, int(td.data.size() * tp.rate_bagging), 0));
     
     while (!stk.empty())
     {
-        int cur = stk.top().node;
+        int node = stk.top().node;
         int l = stk.top().l;
         int r = stk.top().r;
         int dep = stk.top().dep;
@@ -156,7 +156,7 @@ void CRandomForest::TrainTree(int tree_id)
         {
             trees[tree_id].push_back(CNode());
             trees[tree_id][node].left = trees[tree_id].size() - 1;
-            stk.push(trees[tree_id][node].left, l, mid - 1, dep + 1);
+            stk.push(CStackElement(trees[tree_id][node].left, l, mid - 1, dep + 1));
         }
         
         if (TestLeaf(mid, r, dep + 1))
@@ -167,7 +167,7 @@ void CRandomForest::TrainTree(int tree_id)
         {
             trees[tree_id].push_back(CNode());
             trees[tree_id][node].right = trees[tree_id].size() - 1;
-            stk.push(trees[tree_id][node].right, mid, r, dep + 1);
+            stk.push(CStackElement(trees[tree_id][node].right, mid, r, dep + 1));
         }
     }
 }
@@ -184,20 +184,20 @@ void CRandomForest::TrainForest(CTrainParam &train_param)
         TrainTree(i);
     }
     cout << "Train forest ok." << endl;
-    ~td();
+    td.~CTrainingData();
     SaveForest(tp.out_name);
 }   
 
 
 
 
-void CRandomForest::SaveNode(int tree_id, int node, ostream &fout)
+void CRandomForest::SaveNode(int tree_id, int node, ofstream &fout)
 {
     if (trees[tree_id][node].isLeaf())
         fout << "L " << trees[tree_id][node].prob << endl;
     else 
         fout << "S " << trees[tree_id][node].phi.du << " " << \
-                trees[tree_id][node].phi.dv << " " \
+                trees[tree_id][node].phi.dv << " " << \
                 trees[tree_id][node].phi.tau << endl;
 }
 
@@ -205,7 +205,7 @@ void CRandomForest::SaveTree(int tree_id, ofstream &fout)
 {
     stack<int> stk;
 
-    SaveNode(0, fout);
+    SaveNode(tree_id, 0, fout);
     stk.push(0);
     while (!stk.empty())
     {
@@ -235,9 +235,9 @@ void CRandomForest::SaveForest(string file_name)
 }
 
 
-void RandomForest::LoadNode(int tree_id, string node_type, ifstream fin)
+void CRandomForest::LoadNode(int tree_id, string node_type, ifstream &fin)
 {
-    if (node_type == 'L')
+    if (node_type[0] == 'L')
     {
         float prob;
         fin >> prob;
@@ -250,13 +250,13 @@ void RandomForest::LoadNode(int tree_id, string node_type, ifstream fin)
     }
 }
 
-void RandomForest::LoadTree(int tree_id, ifstream &fin)
+void CRandomForest::LoadTree(int tree_id, ifstream &fin)
 {
     stack<int> stk;
     string node_type;
     
     fin >> node_type;
-    LoadNode(tree_id, note_type, fin);
+    LoadNode(tree_id, node_type, fin);
     
     stk.push(0);
     while (!stk.empty())
@@ -278,7 +278,7 @@ void RandomForest::LoadTree(int tree_id, ifstream &fin)
     }
 }
 
-void RandomForest::LoadForest(string file_name)
+void CRandomForest::LoadForest(string file_name)
 {
     ifstream fin(file_name);
     int num_tree;
@@ -289,7 +289,7 @@ void RandomForest::LoadForest(string file_name)
         LoadTree(i, fin);
     }
     fin.close();
-    cout << "Loaded forest from " << file_name " ." << endl;
+    cout << "Loaded forest from " << file_name << " ." << endl;
 }
 
 
@@ -297,7 +297,7 @@ void RandomForest::LoadForest(string file_name)
 float CRandomForest::Predict(Mat &img, int u, int v)
 {
     float prob = 0;
-    for (int i = 0; i < trees.size(); i++)
+    for (int tree_id = 0; tree_id < trees.size(); tree_id++)
     {
         int node = 0;
         while (!(trees[tree_id][node].isLeaf()))
@@ -315,10 +315,10 @@ float CRandomForest::Predict(Mat &img, int u, int v)
 
 Mat CRandomForest::Detect(Mat &img)
 {
-    Mat res = img.copy();
+    Mat res = img.clone();
     for (int i = 0; i < img.rows; i++)
         for (int j = 0; j < img.cols; j++)
-            res.at<Vec3b>[2] = int(Predict(img, i, j) * 255);
+            res.at<Vec3b>(i, j)[2] = int(Predict(img, i, j) * 255);
     return res;
 }
 
