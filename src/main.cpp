@@ -11,9 +11,9 @@ int main()
     
 
     randomforest_hand_detector.TrainForest(tp);
-    randomforest_hand_detector.LoadForest();
+    //randomforest_hand_detector.LoadForest();
     Mat img = imread("test.png");
-    imshow("res", img);
+    imshow("res", randomforest_hand_detector.Detect(img));
     waitKey();
     return 0;
 }

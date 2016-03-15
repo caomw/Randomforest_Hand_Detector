@@ -73,6 +73,9 @@ CSplitCandidate CRandomForest::FindBestPhi(int l, int r)
     for (int t = 0; t < tp.num_offset; t++)
     {
         CSplitCandidate phi = CSplitCandidate::RandSplitCandidate(tp.range_offset);
+        
+        //cerr << "split " << t << " " << phi.du << " " << phi.dv << endl;
+        
         float sum_label = 0;
         for (int i = l; i <= r; i++)
         {
@@ -129,7 +132,7 @@ void CRandomForest::TrainTree(int tree_id)
 {
     stack<CStackElement> stk;
     int mid, cnt = 0;
-    cout << "Training tree" << tree_id << "." << endl;
+    cout << "Training tree " << tree_id << "." << endl;
     
     td.shuffle();
     trees[tree_id].clear();
@@ -143,6 +146,8 @@ void CRandomForest::TrainTree(int tree_id)
         int r = stk.top().r;
         int dep = stk.top().dep;
         
+        cerr << "Running Range " << l << " " << r <<endl;
+
         stk.pop();
         
         trees[tree_id][node].phi = FindBestPhi(l, r);
@@ -310,6 +315,7 @@ float CRandomForest::Predict(Mat &img, int u, int v)
         prob += trees[tree_id][node].prob;
     }
     prob /= trees.size();
+//    cerr << "prob " << prob << endl;
     return prob;
 }
 
@@ -318,7 +324,13 @@ Mat CRandomForest::Detect(Mat &img)
     Mat res = img.clone();
     for (int i = 0; i < img.rows; i++)
         for (int j = 0; j < img.cols; j++)
-            res.at<Vec3b>(i, j)[2] = int(Predict(img, i, j) * 255);
+            if (res.at<Vec3b>(i, j)[0] + (res.at<Vec3b>(i, j)[1] << 8) < BACKGROUND_DEPTH)
+                {
+                    //res.at<Vec3b>(i, j)[0] = int(Predict(img, i, j) * 255);
+                    //res.at<Vec3b>(i, j)[1] = int(Predict(img, i, j) * 255);
+                    res.at<Vec3b>(i, j)[2] = int(Predict(img, i, j) * 255);
+                    //cerr << (int)res.at<Vec3b>(i, j)[2] << endl;
+                }
     return res;
 }
 

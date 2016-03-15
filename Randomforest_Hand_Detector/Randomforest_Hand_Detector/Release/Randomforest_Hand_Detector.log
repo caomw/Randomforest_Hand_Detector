@@ -1,20 +1,6 @@
-﻿Build started 3/15/2016 8:41:07 PM.
+﻿Build started 3/15/2016 9:24:55 PM.
      1>Project "D:\Projects\Randomforest_Hand_Detector\Randomforest_Hand_Detector\Randomforest_Hand_Detector\Randomforest_Hand_Detector.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\randomforest_base.cpp
-         randomforest_base.cpp
-     1>D:\Projects\Randomforest_Hand_Detector\include\randomforest_base.hpp(21): warning C4305: 'initializing' : truncation from 'double' to 'const float'
-     1>D:\Projects\Randomforest_Hand_Detector\include\randomforest_base.hpp(23): warning C4305: 'initializing' : truncation from 'double' to 'const float'
-     1>D:\Projects\Randomforest_Hand_Detector\include\randomforest_base.hpp(24): warning C4305: 'initializing' : truncation from 'double' to 'const float'
-     1>D:\Projects\Randomforest_Hand_Detector\include\randomforest_base.hpp(28): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
-     1>..\..\src\randomforest_base.cpp(36): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>..\..\src\randomforest_base.cpp(36): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
-     1>..\..\src\randomforest_base.cpp(37): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>..\..\src\randomforest_base.cpp(37): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
-     1>..\..\src\randomforest_base.cpp(65): warning C4244: 'return' : conversion from 'double' to 'float', possible loss of data
-     1>..\..\src\randomforest_base.cpp(123): warning C4018: '<' : signed/unsigned mismatch
-     1>..\..\src\randomforest_base.cpp(144): warning C4305: '=' : truncation from 'double' to 'float'
-       Link:
+     1>Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Projects\Randomforest_Hand_Detector\Randomforest_Hand_Detector\Release\Randomforest_Hand_Detector.exe" /INCREMENTAL:NO /NOLOGO opencv_ts300.lib opencv_world300.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Projects\Randomforest_Hand_Detector\Randomforest_Hand_Detector\Release\Randomforest_Hand_Detector.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Projects\Randomforest_Hand_Detector\Randomforest_Hand_Detector\Release\Randomforest_Hand_Detector.lib" /MACHINE:X86 /SAFESEH Release\main.obj
          Release\randomforest.obj
          Release\randomforest_base.obj
@@ -25,4 +11,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.70
+Time Elapsed 00:00:01.00

@@ -16,8 +16,7 @@
 namespace handlib
 {
 
-const int BACKGROUND_DEPTH = 2001;
-const cv::Vec3b BACKGROUND = cv::Vec3b(BACKGROUND_DEPTH % 255, BACKGROUND_DEPTH / 255, 0);
+const int BACKGROUND_DEPTH = 1994;
 const float EPS = 1e-6;
 const int FOREGROUND_BACKGROUND_BALANCE = 10;
 const float DELTA = 0.05;

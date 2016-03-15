@@ -33,8 +33,8 @@ bool CNode::isLeaf()
 CSplitCandidate CSplitCandidate::RandSplitCandidate(int range_offset)
 {
     CSplitCandidate phi;
-    phi.du = RandFloatLog(range_offset);
-    phi.dv = RandFloatLog(range_offset);
+    phi.du = RandFloat(range_offset);
+    phi.dv = RandFloat(range_offset);
     if (rand() % 2)
         phi.du = - phi.du;
     if (rand() % 2)
@@ -98,12 +98,14 @@ CTrainingData::CTrainingData(std::string img_dir, int num_image, int num_pixel)
         while (j < num_pixel)
         {
             int u = 0, v = 0;
-            while (img.at<Vec3b>(u, v) == BACKGROUND) 
+            while (GetDepth(u, v, img) >= BACKGROUND_DEPTH ) 
             {
                 u = rand() % img.rows;
                 v = rand() % img.cols;
             }
-            
+//            cerr << int(img.at<Vec3b>(u, v)[0]) << " " << int(img.at<Vec3b>(u, v)[1]) << \
+//              " " << int(img.at<Vec3b>(u, v)[2]) << endl;
+//            cerr << "u v " << u << " " << v << endl;
             if (GetLabel(u, v, img) < EPS && rand() % FOREGROUND_BACKGROUND_BALANCE)
             {
                 continue;
@@ -112,7 +114,7 @@ CTrainingData::CTrainingData(std::string img_dir, int num_image, int num_pixel)
             num_foreground += GetLabel(u, v, img);
             data.push_back(CPixel(u, v, i));
         }
-        cout << "Data" << file_name.str() << "loaded." << endl;
+        cout << "Data " << file_name.str() << " loaded." << endl;
     }
     
     cout << "Load data ok. Foreground ratio is " << num_foreground / data.size() << "." << endl; 
@@ -136,13 +138,13 @@ CTrainingData:: ~CTrainingData()
 CTrainParam::CTrainParam()
 {
     num_tree = 4;
-    num_image = 600;//6736;
-    num_pixel = 2000;
-    num_offset = 1000;
+    num_image = 1800;//6736;
+    num_pixel = 1000;
+    num_offset = 100;
     max_dep = 20;
     min_sample = 5;
     rate_bagging = 0.6;
-    range_offset = 1000;
+    range_offset = 100000;
     img_dir = "D:\\Datasets\\dataset_rdf\\dataset\\";
     out_name = "forest.model";
 }   
