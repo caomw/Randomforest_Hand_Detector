@@ -248,10 +248,15 @@ void CRandomForest::LoadNode(int tree_id, string node_type, ifstream &fin)
         fin >> prob;
         trees[tree_id].push_back(CNode(prob));
     } else 
+    if (node_type[0] == 'S')
     {
         CSplitCandidate phi;
         fin >> phi.du >> phi.dv >> phi.tau;
         trees[tree_id].push_back(CNode(phi));
+    } else 
+    {
+        cout << "Error Input Format!" << endl;
+        exit(-1);
     }
 }
 

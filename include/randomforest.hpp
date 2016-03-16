@@ -27,12 +27,12 @@ private:
     void SaveTree(int tree_id, std::ofstream &fout);
     void LoadNode(int tree_id, std::string node_type, std::ifstream &fin);
     void LoadTree(int tree_id, std::ifstream &fin);
-    void SaveForest(std::string file_name = "forest.model");
 public:
     CRandomForest() {}
     ~CRandomForest();
     
     void TrainForest(CTrainParam &train_param);
+    void SaveForest(std::string file_name = "forest.model");
     void LoadForest(std::string file_name = "forest.model");
     cv::Mat Detect(cv::Mat &img);
 };

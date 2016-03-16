@@ -14,7 +14,7 @@ CNode::CNode()
 
 CNode::CNode(CSplitCandidate phi)
 {
-    phi = phi;
+    this->phi = phi;
     prob = -1;
 }
 
@@ -92,7 +92,7 @@ CTrainingData::CTrainingData(std::string img_dir, int num_image, int num_pixel)
             cout << file_name.str() << "not existd!" << endl;
             continue;
         }
-        images.push_back(img);
+        images.push_back(img.clone());
         
         int j = 0;
         while (j < num_pixel)
@@ -114,6 +114,7 @@ CTrainingData::CTrainingData(std::string img_dir, int num_image, int num_pixel)
             num_foreground += GetLabel(u, v, img);
             data.push_back(CPixel(u, v, i));
         }
+        img.release();
         cout << "Data " << file_name.str() << " loaded." << endl;
     }
     
@@ -138,7 +139,7 @@ CTrainingData:: ~CTrainingData()
 CTrainParam::CTrainParam()
 {
     num_tree = 4;
-    num_image = 1800;//6736;
+    num_image = 6736;
     num_pixel = 1000;
     num_offset = 100;
     max_dep = 20;

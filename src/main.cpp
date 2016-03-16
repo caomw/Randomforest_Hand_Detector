@@ -10,8 +10,9 @@ int main()
     CTrainParam tp;
     
 
-    randomforest_hand_detector.TrainForest(tp);
-    //randomforest_hand_detector.LoadForest();
+    //randomforest_hand_detector.TrainForest(tp);
+    randomforest_hand_detector.LoadForest();
+    randomforest_hand_detector.SaveForest("forest2.model");
     Mat img = imread("test.png");
     imshow("res", randomforest_hand_detector.Detect(img));
     waitKey();
