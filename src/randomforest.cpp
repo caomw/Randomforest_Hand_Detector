@@ -10,13 +10,13 @@ bool CRandomForest::TestLeaf(int l, int r, int dep)
 {
     if (r - l + 1 <= tp.min_sample)
     {
-        cout << "Leaf node: too few samples." << endl;
+        cout << "Leaf node at " << l << " " << r << " : " <<  "too few samples." << endl;
         return true;
     }
     
     if (dep > tp.max_dep)
     {
-        cout << "Leaf node: max depth reached." << endl;
+        cout << "Leaf node at " << l << " " << r << " : " << "max depth reached." << endl;
         return true;
     }
     
@@ -26,7 +26,7 @@ bool CRandomForest::TestLeaf(int l, int r, int dep)
     avg_label /= (r - l + 1);
     if (avg_label < DELTA || avg_label > 1 - DELTA)
     {
-        cout << "Leaf node: label equal." << endl;
+        cout << "Leaf node at " << l << " " << r << " : " << "label equal." << endl;
         return true;
     }
     
